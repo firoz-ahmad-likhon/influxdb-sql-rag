@@ -1,0 +1,62 @@
+services:
+  influxdb3:
+    image: quay.io/influxdb/influxdb3-core:latest
+    container_name: influxdb3-core
+    command: >
+      serve
+      --node-id=local-pc
+      --object-store file
+      --data-dir /var/lib/influxdb3
+    ports:
+      - "8181:8181"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: likhon
+      DOCKER_INFLUXDB_INIT_PASSWORD: likhon
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: likhon
+      DOCKER_INFLUXDB_INIT_ORG: likhon
+      DOCKER_INFLUXDB_INIT_BUCKET: student
+    volumes:
+      - influxdb3-data:/var/lib/influxdb3
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  langgraph:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: langgraph-app
+    ports:
+      - "2024:2024"
+    depends_on:
+      - influxdb3
+      - ollama
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+    networks:
+      - app-network
+    restart: unless-stopped
+
+volumes:
+  influxdb3-data:
+  ollama-data:
+
+networks:
+  app-network:
+    driver: bridge

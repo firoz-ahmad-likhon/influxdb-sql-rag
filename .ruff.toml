@@ -1,0 +1,53 @@
+# Enable rules.
+select = ["A", "B", "COM", "D", "DTZ", "E", "F", "I", "N", "PL", "PT", "T20", "UP"]
+
+# Ignore rules.
+ignore = ["D100", "D203", "D213", "I001", "UP017", "PLR0915"]
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = []
+
+# Avoid trying to fix.
+unfixable = ["B"]
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    ".idea",
+    "__pycache__",
+    "*.log",
+    ".pytest_cache",
+]
+
+# Set line length.
+line-length = 2000
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Assume Python >= 3.11
+target-version = "py311"
+
+# Ignore example: "path/to/file.py" = ["E402"]
+[per-file-ignores]
+"__init__.py" = ["ALL"]
+"**/{tests,docs,tools}/*" = ["E402"]

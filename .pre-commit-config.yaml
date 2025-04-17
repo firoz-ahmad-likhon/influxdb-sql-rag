@@ -1,0 +1,41 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: check-added-large-files
+    -   id: check-json
+    -   id: check-xml
+    -   id: debug-statements
+    -   id: requirements-txt-fixer
+    -   id: mixed-line-ending
+    -   id: check-case-conflict
+    -   id: check-merge-conflict
+    -   id: check-symlinks
+    -   id: check-executables-have-shebangs
+    -   id: check-byte-order-marker
+    -   id: check-ast
+
+    # Ruff
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.4
+    hooks:
+    -   id: ruff
+        args: ["--config", "./.ruff.toml"]
+
+    # Mypy
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: 'v1.15.0'
+    hooks:
+    -   id: mypy
+        args: ["--config-file", "./.mypy.ini", --explicit-package-bases]
+
+    # Black
+-   repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+    -   id: black
