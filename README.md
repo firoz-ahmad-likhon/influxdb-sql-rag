@@ -5,8 +5,8 @@ This project is an implementation of question answering sql rag in InfluxDB and 
 ![DAG](static/influxdb-rag-white.png)
 
 ## Prerequisites
-- Docker installed
-- An account in Langsmith
+- Docker installed.
+- An account in Langsmith.
 
 ## Models
 - llama3.2
@@ -51,7 +51,7 @@ home,room=Kitchen temp=22.5,hum=36.0,co=0i 1736337600
 home,room=Living\ Room temp=22.4,hum=36.0,co=0i 1736341200
 home,room=Kitchen temp=22.8,hum=36.5,co=1i 1736341200'
 ```
-OR you can use file
+OR you can use file:
 ```
 influxdb3 write --database students  --file /home/docker/attendance.txt
 ```
@@ -64,16 +64,21 @@ influxdb3 query --database=students "SHOW TABLES"
 influxdb3 delete table --database students attendance
 ```
 
-***Langgraph***
-1. Run `docker-compose exec -it langgraph bash`.
-2. Run `langgraph dev --host 0.0.0.0 --port 2024`
-3. [Studio UI](https://smith.langchain.com/studio/?baseUrl=http://0.0.0.0:2024). On failure, browse to `Langgraph Platform > Langgraph Studio`
-4. [Langsmith UI](https://smith.langchain.com)
-
 ***Ollama***
 1. Run `docker-compose exec -it ollama bash`.
-2. Install models: `ollama pull llama3.2` `ollama pull llama3-groq-tool-use`
-3. Start the server: `ollama serve`
+2. Install models: `ollama pull llama3.2` `ollama pull llama3-groq-tool-use`.
+3. Start the server: `ollama serve`.
+
+***Langgraph***
+1. Run `docker-compose exec -it langgraph bash`.
+2. Run `langgraph dev --host 0.0.0.0 --port 2024`.
+3. [Studio UI](https://smith.langchain.com/studio/?baseUrl=http://0.0.0.0:2024). On failure, browse to `Langgraph Platform > Langgraph Studio`.
+4. [Langsmith UI](https://smith.langchain.com).
+
+***CLI***
+1. Run `docker-compose exec -it langgraph bash`.
+2. Run `python rag.py`.
+3. To end the chat type `exit` or `quit`.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
