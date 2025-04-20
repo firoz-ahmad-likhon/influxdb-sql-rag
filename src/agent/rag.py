@@ -1,6 +1,6 @@
-from src.agent.workflow import dag
+from src.agent.graph import Workflow
 
 try:
-    rag = dag()
+    rag = Workflow().build()
 except Exception as e:
     raise RuntimeError("Error: ", e) from e
