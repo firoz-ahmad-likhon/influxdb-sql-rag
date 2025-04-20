@@ -72,7 +72,7 @@ influxdb3 delete table --database students attendance
 ***Langgraph***
 1. Run `docker-compose exec -it langgraph bash`.
 2. Run `langgraph dev --host 0.0.0.0 --port 2024`.
-3. [Studio UI](https://smith.langchain.com/studio/?baseUrl=http://0.0.0.0:2024). On failure, browse to `Langgraph Platform > Langgraph Studio`.
+3. [Studio UI](https://smith.langchain.com/studio/?baseUrl=http://127.0.0.1:2024). On failure, browse to `Langgraph Platform > Langgraph Studio`.
 4. [Langsmith UI](https://smith.langchain.com).
 
 ***CLI***
