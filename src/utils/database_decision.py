@@ -61,7 +61,7 @@ class Decisive:
                     prompt,
                 )
             )
-            return response.query is True
+            return response.truth is True
         except Exception:
             return False
 
