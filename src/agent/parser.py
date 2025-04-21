@@ -13,3 +13,9 @@ class AnswerOutput(BaseModel):
     answer: str = Field(
         description="Natural answer from result of executed SQL query in InfluxDB 3.",
     )
+
+
+class TruthOutput(BaseModel):
+    """Truth value of the statement."""
+
+    truth: bool = Field(description="Output is True or False.")

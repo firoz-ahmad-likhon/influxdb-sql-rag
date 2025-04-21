@@ -1,13 +1,15 @@
 import re
 from langchain_core.prompts import ChatPromptTemplate
+from src.agent.parser import TruthOutput
 from src.agent.prompt import Prompt
 from influxdb_client_3 import InfluxDBClient3
 from langchain_ollama import ChatOllama
 from src.utils.influxdb import InfluxDB
+from src.agent.state import State
 
 
 class Decisive:
-    """Database related class for making decisions."""
+    """Database related class for making decisions by analyzing the question."""
 
     def __init__(self, client: InfluxDBClient3, llm: ChatOllama) -> None:
         """Initialize the class."""
@@ -20,78 +22,12 @@ class Decisive:
         self.tables = InfluxDB.tables(self.client)
         self.columns = InfluxDB.columns(self.client, self.tables)
 
-    def database_usability(self, question: str) -> bool:
+    def database_usability(self, question: str, state: State) -> bool:
         """Determine if the question is related to database content."""
-        # Check for common time series metrics or keywords in the question
-        time_series_keywords = [
-            "temperature",
-            "humidity",
-            "pressure",
-            "sensor",
-            "reading",
-            "average",
-            "measurement",
-            "data point",
-            "time series",
-            "metric",
-            "statistics",
-            "min",
-            "max",
-            "mean",
-            "median",
-            "trend",
-            "record",
-            "log",
-            "monitor",
-        ]
-
-        # Get database-specific terms (tables and columns)
-        db_specific_terms = list(self.tables) + [
-            col["column_name"]
-            for table_cols in self.columns.values()
-            for col in table_cols
-        ]
-
-        # Check if any database term or time series keyword is in the question
-        question_lower = question.lower()
-
-        # First check if this is a follow-up question about previous results
-        followup_indicators = [
-            "show me",
-            "give me",
-            "display",
-            "the result",
-            "that data",
-            "previous result",
-            "same data",
-            "in tabular",
-            "table format",
-            "you already have",
-            "what you found",
-            "the records",
-            "previous query",
-            "those rows",
-            "the data again",
-            "full results",
-            "show all",
-            "raw data",
-            "original data",
-            "complete data",
-            "the same",
-        ]
-
-        # If it's likely a follow-up, treat it as database-related
-        for indicator in followup_indicators:
-            if indicator in question_lower:
-                return True
-
-        for term in db_specific_terms:
-            if term.lower() in question_lower:
-                return True
-
-        for keyword in time_series_keywords:
-            if keyword.lower() in question_lower:
-                return True
+        if self.exist_in_db(question):
+            return True
+        if Decisive.follow_up(question, state):
+            return True
 
         # If no direct match, use LLM as a fallback with improved prompt
         prompt_template = ChatPromptTemplate(
@@ -109,16 +45,23 @@ class Decisive:
             run_name="Database Usability Prompt",
         ).invoke(
             {
-                "instruction": Prompt.database_usability().format(columns=self.columns),
+                "instruction": Prompt.database_usability().format(
+                    columns=self.columns,
+                    state_result=state.get("result", None),
+                ),
                 "question": question,
             },
         )
 
         try:
-            response = self.llm.with_config(run_name="Database Usability").invoke(
-                prompt,
+            response = (
+                self.llm.with_structured_output(schema=TruthOutput)
+                .with_config(run_name="Database Usability")
+                .invoke(
+                    prompt,
+                )
             )
-            return "TRUE" in response.content.upper()
+            return response.query is True
         except Exception:
             return False
 
@@ -168,3 +111,42 @@ class Decisive:
         if best_score >= len(table_name) / 2:
             return best_match
         return None
+
+    @staticmethod
+    def follow_up(question: str, state: State) -> bool:
+        """Check if this is a follow-up question about previous results."""
+        followup_indicators = [
+            "previous data",
+            "previous result",
+            "previous query",
+            "previous question",
+            "already have",
+            "what you found",
+            "prior data",
+            "prior result",
+            "prior query",
+            "prior question",
+        ]
+
+        question_lower = question.lower()
+        for indicator in followup_indicators:
+            if indicator in question_lower and state.get("result", None):
+                return True
+
+        return False
+
+    def exist_in_db(self, question: str) -> bool:
+        """Check any keyword match with database schema."""
+        db_specific_terms = list(self.tables) + [
+            col["column_name"]
+            for table_cols in self.columns.values()
+            for col in table_cols
+        ]
+
+        question_lower = question.lower()
+
+        for term in db_specific_terms:
+            if term.lower() in question_lower:
+                return True
+
+        return False

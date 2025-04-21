@@ -30,25 +30,10 @@ class Quarify:
         """Call the class."""
         question = state["question"]
 
-        if not self.decision.database_usability(question):
+        if not self.decision.database_usability(question, state):
             return {"question": question, "use_chat": True}
 
-        question_lower = question.lower()
-        indicators = [
-            "give me the result",
-            "show the data",
-            "display the table",
-            "show me what you have",
-            "show it in table",
-            "in tabular format",
-            "tabular form",
-            "you already have",
-            "previous result",
-            "the same data",
-        ]
-        if any(indicator in question_lower for indicator in indicators) and state.get(
-            "result",
-        ):
+        if Decisive.follow_up(question, state):
             return {
                 **state,
                 "question": question,

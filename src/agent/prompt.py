@@ -47,14 +47,17 @@ class Prompt:
         We have an InfluxDB database with the following tables and columns:
         {columns}
 
+        Previous query result value: {state_result}
+
         You must return either TRUE or FALSE.
         A question requires database access if:
         1. It mentions any table or column name exactly OR partially (e.g., ''humidity'' ~ 'hum')
         2. It contains words that are **synonyms or similar in meaning** to the table or column names (e.g., via cosine similarity or common usage)
-        3. It asks about previous query results
+        3. It refers to previous query results, and Value of result is not empty or None.
 
         Return FALSE if:
         1. The question is about general knowledge, programming help, or anything unrelated to querying the database.
+        2. The user refers to a previous result, but Value of result is None or empty.
         """
 
     @staticmethod
