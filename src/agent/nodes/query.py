@@ -63,19 +63,38 @@ class Quarify:
         )
 
         try:
-            response = self.llm.with_structured_output(schema=QueryOutput).invoke(
-                prompt,
+            response = (
+                self.llm.with_structured_output(schema=QueryOutput)
+                .with_config(run_name="Query Generation")
+                .invoke(
+                    prompt,
+                )
             )
             query_output = cast(dict[str, Any], response.model_dump())
             table_name = self.decision.extract_table_name(query_output["query"])
 
             if table_name and not self.decision.validate_table_exists(table_name):
+                error_msg = f"Table '{table_name}' does not exist."
+                suggested_table = self.decision.suggest_similar_table(
+                    self.decision.extract_table_name(state["query"]),
+                )
+                if suggested_table:
+                    error_msg += f" Did you mean '{suggested_table}'?"
                 return {
                     "question": question,
                     "use_chat": True,
-                    "error": f"Table '{table_name}' does not exist",
+                    "error": error_msg,
                 }
 
-            return {**cast(State, query_output), "use_chat": False}
+            return {
+                **cast(State, query_output),
+                "use_chat": False,
+                "is_followup": False,
+            }
         except Exception as e:
-            return {"question": question, "use_chat": True, "error": str(e)}
+            return {
+                "question": question,
+                "use_chat": False,
+                "is_followup": False,
+                "error": str(e),
+            }
