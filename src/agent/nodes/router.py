@@ -6,8 +6,4 @@ class Router:
 
     def __call__(self, state: State) -> str:
         """Call the class."""
-        if state.get("is_followup", False) and state.get("result") is not None:
-            return "answer_up"
-        if state.get("use_chat", False):
-            return "answer_up"
-        return "execute"
+        return "answer_up" if state.get("type") in ("chat", "follow-up") else "execute"

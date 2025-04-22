@@ -31,14 +31,12 @@ class Quarify:
         question = state["question"]
 
         if not self.decision.database_usability(question, state):
-            return {"question": question, "use_chat": True}
+            return {"question": question, "type": "chat"}
 
         if Decisive.follow_up(question, state):
             return {
-                **state,
                 "question": question,
-                "use_chat": False,
-                "is_followup": True,
+                "type": "follow-up",
             }
 
         prompt_template = ChatPromptTemplate(
@@ -82,19 +80,20 @@ class Quarify:
                     error_msg += f" Did you mean '{suggested_table}'?"
                 return {
                     "question": question,
-                    "use_chat": True,
+                    "type": "chat",
                     "error": error_msg,
                 }
 
-            return {
-                **cast(State, query_output),
-                "use_chat": False,
-                "is_followup": False,
-            }
+            return cast(
+                State,
+                {
+                    **query_output,
+                    "type": "query",
+                },
+            )
         except Exception as e:
             return {
                 "question": question,
-                "use_chat": False,
-                "is_followup": False,
+                "type": "query",
                 "error": str(e),
             }

@@ -14,15 +14,9 @@ class Execute:
 
     def __call__(self, state: State) -> State:
         """Call the Execute class."""
-        if state.get("use_chat", False):
-            return state
-
-        if state.get("is_followup", False) and state.get("result") is not None:
-            return state
-
         try:
             result = InfluxDB.execute_query(self.client, state["query"])
-            return {**state, "result": result, "error": None}
+            return {"result": result, "error": None}
         except Exception as e:
             error_msg = str(e)
             if "table" in error_msg.lower() and "not found" in error_msg.lower():
@@ -32,4 +26,4 @@ class Execute:
                 if suggested_table:
                     error_msg += f" Did you mean '{suggested_table}'?"
 
-            return {**state, "result": None, "error": error_msg}
+            return {"result": None, "error": error_msg}

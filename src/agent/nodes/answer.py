@@ -1,3 +1,4 @@
+from typing import cast
 from src.agent.state import State
 from langchain_ollama import ChatOllama
 from src.agent.prompt import Prompt
@@ -14,16 +15,15 @@ class Answer:
 
     def __call__(self, state: State) -> State:
         """Call the answer class."""
-        if state.get("use_chat", False):
+        if state.get("type") == "chat":
             return self.normal_chat(state)
 
         if state.get("error"):
             return {
-                **state,
                 "answer": f"Sorry, I could not find any information regarding your question. Error: {state['error']}",
             }
 
-        if state.get("is_followup", False):
+        if state.get("type") == "follow-up":
             template = ChatPromptTemplate(
                 [
                     ("system", "{instruction}"),
@@ -35,7 +35,7 @@ class Answer:
                 {
                     "instruction": Prompt.follow_up().format(
                         question=state["question"],
-                        query=state.get("query", "Unknown"),
+                        query=state.get("query"),
                         result=state.get("result"),
                     ),
                 },
@@ -43,10 +43,9 @@ class Answer:
 
             try:
                 response = self.llm.invoke(prompt)
-                return {**state, "answer": str(response.content)}
+                return {"answer": str(response.content)}
             except Exception as e:
                 return {
-                    **state,
                     "answer": f"Sorry, I encountered an error while answering your question: {str(e)}",
                 }
 
@@ -71,10 +70,9 @@ class Answer:
             response = self.llm.with_structured_output(schema=AnswerOutput).invoke(
                 prompt,
             )
-            return {**state, **response.model_dump()}
+            return cast(State, {**response.model_dump()})
         except Exception as e:
             return {
-                **state,
                 "answer": f"Sorry, I encountered an error while answering your question: {str(e)}",
             }
 
@@ -91,16 +89,15 @@ class Answer:
             {
                 "instruction": Prompt.normal_chat().format(
                     question=state["question"],
-                    error=state.get("error", "None"),
+                    error=state.get("error", None),
                 ),
             },
         )
 
         try:
             response = self.llm.invoke(prompt)
-            return {**state, "answer": str(response.content)}
+            return {"answer": str(response.content)}
         except Exception as e:
             return {
-                **state,
                 "answer": f"Sorry, I encountered an error while answering your question: {str(e)}",
             }
