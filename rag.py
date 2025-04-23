@@ -1,12 +1,12 @@
 import uuid
 from src.agent.graph import Workflow
-from langgraph.checkpoint.memory import MemorySaver
+from src.utils.helper import Helper
 
 
 def run() -> None:
     """Run the RAG agent."""
     try:
-        rag = Workflow().build(checkpointer=MemorySaver())
+        rag = Workflow().build(checkpointer=Helper.checkpointer())
         config = {"configurable": {"thread_id": str(uuid.uuid4())}}
 
         while True:

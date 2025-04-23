@@ -12,6 +12,15 @@ This project is an implementation of question answering sql rag in InfluxDB and 
 - llama3.2
 - llama3-groq-tool-use
 
+## LLM Connection
+- OLLAMA
+
+## Memory
+Currently, the project supports the following memory savers and switching them in `.env` file.:
+- MemorySaver
+- PostgresSaver
+
+
 ## DEVELOPMENT
 1. Clone the repository.
 2. Copy the `.env.example` to `.env` and update the values as per your environment.
@@ -79,6 +88,7 @@ influxdb3 delete table --database students attendance
 1. Run `docker-compose exec -it langgraph bash`.
 2. Run `python rag.py`.
 3. To end the chat type `exit` or `quit`.
+
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
