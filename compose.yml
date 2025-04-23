@@ -53,9 +53,26 @@ services:
       - app-network
     restart: unless-stopped
 
+  postgres:
+    container_name: postgres-sql
+    image: postgres
+    hostname: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
 volumes:
   influxdb3-data:
   ollama-data:
+  postgres-data:
 
 networks:
   app-network:

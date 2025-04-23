@@ -10,7 +10,7 @@ from src.agent.nodes.query import Quarify
 from src.agent.nodes.execute import Execute
 from src.agent.nodes.answer import Answer
 from src.agent.nodes.router import Router
-from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.base import BaseCheckpointSaver
 import os
 
 
@@ -50,7 +50,10 @@ class Workflow:
         self.answer_up = Answer(self.llm)
         self.router = Router()
 
-    def build(self, checkpointer: MemorySaver | None = None) -> CompiledStateGraph:
+    def build(
+        self,
+        checkpointer: BaseCheckpointSaver | None = None,
+    ) -> CompiledStateGraph:
         """Create and compile the state graph."""
         graph = StateGraph(State)
         graph.add_node("quarify", self.quarify)
