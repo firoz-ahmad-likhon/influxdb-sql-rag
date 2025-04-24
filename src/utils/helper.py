@@ -1,4 +1,4 @@
-from src.Memory.saver import SaverStrategy
+from src.memory.checkpoint import CheckpointSaver
 from langgraph.checkpoint.base import BaseCheckpointSaver
 
 
@@ -6,6 +6,6 @@ class Helper:
     """Common helper functions."""
 
     @staticmethod
-    def checkpointer() -> BaseCheckpointSaver:
+    def checkpoint() -> BaseCheckpointSaver:
         """Return the checkpointer based on the environment variable."""
-        return SaverStrategy().get_saver()
+        return CheckpointSaver().saver()

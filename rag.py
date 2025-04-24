@@ -6,7 +6,7 @@ from src.utils.helper import Helper
 def run() -> None:
     """Run the RAG agent."""
     try:
-        rag = Workflow().build(checkpointer=Helper.checkpointer())
+        rag = Workflow().build(checkpointer=Helper.checkpoint())
         config = {"configurable": {"thread_id": str(uuid.uuid4())}}
 
         while True:

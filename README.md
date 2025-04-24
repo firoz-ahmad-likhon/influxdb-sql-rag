@@ -16,7 +16,7 @@ This project is an implementation of question answering sql rag in InfluxDB and 
 - OLLAMA
 
 ## Memory
-Currently, the project supports the following memory savers and switching them in `.env` file.:
+Currently, the project supports the following memory savers and switching them in `.env` file:
 - MemorySaver
 - PostgresSaver
 
