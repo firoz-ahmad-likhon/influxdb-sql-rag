@@ -9,27 +9,27 @@ from src.utils.config import Config
 Config.load_env()  # Load environment variables
 
 
-class SaverStrategyInterface(ABC):
-    """Interface for saver strategies."""
+class CheckpointStrategyInterface(ABC):
+    """Interface for checkpoint strategies."""
 
     @abstractmethod
-    def get_saver(self) -> None:
+    def saver(self) -> None:
         """Get the checkpointer."""
         pass
 
 
-class MemorySaverStrategy(SaverStrategyInterface):
+class MemoryCheckpoint(CheckpointStrategyInterface):
     """Memory saver strategy."""
 
-    def get_saver(self) -> MemorySaver:
+    def saver(self) -> MemorySaver:
         """Get the memory checkpointer."""
         return MemorySaver()
 
 
-class PostgresSaverStrategy(SaverStrategyInterface):
+class PostgresCheckpoint(CheckpointStrategyInterface):
     """Postgres saver strategy."""
 
-    def get_saver(self) -> PostgresSaver:
+    def saver(self) -> PostgresSaver:
         """Get the postgres checkpointer."""
         pool = ConnectionPool(
             conninfo=os.getenv("POSTGRES_URI"),
@@ -42,12 +42,12 @@ class PostgresSaverStrategy(SaverStrategyInterface):
 
 
 STRATEGIES = {
-    "memory": MemorySaverStrategy,
-    "postgres": PostgresSaverStrategy,
+    "memory": MemoryCheckpoint,
+    "postgres": PostgresCheckpoint,
 }
 
 
-class SaverStrategy:
+class CheckpointSaver:
     """Saver strategy."""
 
     def __init__(self) -> None:
@@ -57,6 +57,6 @@ class SaverStrategy:
             raise ValueError(f"Unknown saver strategy: {strategy}")
         self._impl = STRATEGIES[strategy]()  # Initialize the actual strategy
 
-    def get_saver(self) -> BaseCheckpointSaver:
+    def saver(self) -> BaseCheckpointSaver:
         """Get the checkpoint saver."""
-        return self._impl.get_saver()
+        return self._impl.saver()
