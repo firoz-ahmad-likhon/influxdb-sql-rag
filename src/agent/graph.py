@@ -30,7 +30,6 @@ class Workflow:
         self.client = InfluxDBClient3(
             token=os.getenv("INFLUXDB_TOKEN"),
             host=os.getenv("INFLUXDB_HOST"),
-            org=os.getenv("INFLUXDB_ORG"),
             database=os.getenv("INFLUXDB_DB"),
         )
 
