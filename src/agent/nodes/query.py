@@ -1,11 +1,14 @@
 from typing import cast, Any
-from src.utils.database_decision import Decisive
+from src.database.database_decision import Decisive
 from src.agent.state import State
 from src.agent.few_shot import InfluxDBFewShot
 from langchain_ollama import ChatOllama
 from src.agent.prompt import Prompt
 from src.agent.parser import QueryOutput
 from langchain_core.prompts import ChatPromptTemplate
+from src.database.influxdb import InfluxDB
+from src.database.query_parser import QueryParser
+from src.utils.helper import Helper
 
 
 class Quarify:
@@ -13,27 +16,23 @@ class Quarify:
 
     def __init__(
         self,
+        client: InfluxDB,
         llm: ChatOllama,
-        decision: Decisive,
-        tables: list[str],
-        columns: dict[str, list[dict[str, str]]],
-        data: dict[str, dict[Any, Any]],
     ) -> None:
         """Initialize the class."""
+        self.client = client
         self.llm = llm
-        self.decision = decision
-        self.tables = tables
-        self.columns = columns
-        self.data = data
 
     def __call__(self, state: State) -> State:
         """Call the class."""
         question = state["question"]
 
-        if not self.decision.database_usability(question, state):
+        decision = Decisive(question, self.client, self.llm, state)
+
+        if not decision.database_usability():
             return {"question": question, "type": "chat"}
 
-        if Decisive.follow_up(question, state):
+        if decision.is_follow_up():
             return {
                 "question": question,
                 "type": "follow-up",
@@ -51,9 +50,9 @@ class Quarify:
             {
                 "instruction": Prompt.sql_query_generation().format(
                     top_k=10,
-                    table_info=self.tables,
-                    column_info=self.columns,
-                    sample_data=self.data,
+                    table_info=decision.tables,
+                    column_info=decision.columns,
+                    sample_data=decision.data,
                     error_list="",
                 ),
                 "question": question,
@@ -69,13 +68,13 @@ class Quarify:
                 )
             )
             query_output = cast(dict[str, Any], response.model_dump())
-            table_name = self.decision.extract_table_name(query_output["query"])
+            query_parser = QueryParser(query_output["query"])
+            table_name = query_parser.extract_table_name()
 
-            if table_name and not self.decision.validate_table_exists(table_name):
+            if table_name and not decision.validate_table_exists(table_name):
                 error_msg = f"Table '{table_name}' does not exist."
-                suggested_table = self.decision.suggest_similar_table(
-                    self.decision.extract_table_name(state["query"]),
-                )
+                suggested_table = Helper.find_similar_item(table_name, decision.tables)
+
                 if suggested_table:
                     error_msg += f" Did you mean '{suggested_table}'?"
                 return {

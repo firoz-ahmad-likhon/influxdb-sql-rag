@@ -1,5 +1,4 @@
-from src.utils.influxdb import InfluxDB
-from src.utils.database_decision import Decisive
+from src.database.influxdb import InfluxDB
 from src.utils.config import Config
 from src.agent.state import State
 from influxdb_client_3 import InfluxDBClient3
@@ -27,25 +26,16 @@ class Workflow:
             base_url=os.getenv("OLLAMA_URL"),
         )
 
-        self.client = InfluxDBClient3(
-            token=os.getenv("INFLUXDB_TOKEN"),
-            host=os.getenv("INFLUXDB_HOST"),
-            database=os.getenv("INFLUXDB_DB"),
+        self.client = InfluxDB(
+            InfluxDBClient3(
+                token=os.getenv("INFLUXDB_TOKEN"),
+                host=os.getenv("INFLUXDB_HOST"),
+                database=os.getenv("INFLUXDB_DB"),
+            ),
         )
 
-        self.decision = Decisive(self.client, self.llm)
-        self.tables = InfluxDB.tables(self.client)
-        self.columns = InfluxDB.columns(self.client, self.tables)
-        self.data = InfluxDB.data(self.client, self.tables)
-
-        self.quarify = Quarify(
-            self.llm,
-            self.decision,
-            self.tables,
-            self.columns,
-            self.data,
-        )
-        self.execute = Execute(self.client, self.decision)
+        self.quarify = Quarify(self.client, self.llm)
+        self.execute = Execute(self.client)
         self.answer_up = Answer(self.llm)
         self.router = Router()
 
