@@ -5,27 +5,26 @@ from influxdb_client_3 import InfluxDBClient3
 class InfluxDB:
     """InfluxDB helper class."""
 
-    @staticmethod
-    def tables(client: InfluxDBClient3) -> list[str]:
+    def __init__(self, client: InfluxDBClient3):
+        """Initialize the InfluxDB helper class."""
+        self.client = client
+
+    def tables(self) -> list[str]:
         """List all tables in the database."""
         return cast(
             list[str],
-            client.query(
+            self.client.query(
                 "SELECT table_name FROM information_schema.tables WHERE table_schema = 'iox';",
                 mode="pandas",
             )["table_name"].tolist(),
         )
 
-    @staticmethod
-    def columns(
-        client: InfluxDBClient3,
-        tables: list[str],
-    ) -> dict[str, list[dict[str, str]]]:
+    def columns(self, tables: list[str]) -> dict[str, list[dict[str, str]]]:
         """Return all columns and their data types for the given tables."""
         schema_info = {}
         for table in tables:
             try:
-                result = client.query(
+                df = self.client.query(
                     f"""
                     SELECT column_name, data_type
                     FROM information_schema.columns
@@ -33,7 +32,6 @@ class InfluxDB:
                     """,
                     mode="pandas",
                 )
-                df = result
                 schema_info[table] = df.to_dict(orient="records")
             except Exception as e:
                 raise Exception(
@@ -42,14 +40,12 @@ class InfluxDB:
 
         return schema_info
 
-    @staticmethod
-    def data(client: InfluxDBClient3, tables: list[str]) -> dict[str, dict[Any, Any]]:
+    def data(self, tables: list[str]) -> dict[str, dict[Any, Any]]:
         """Return the first 5 rows from each table as JSON."""
         table_data = {}
         for table in tables:
             try:
-                result = client.query(f"SELECT * FROM {table} LIMIT 5")
-                df = result.to_pandas()
+                df = self.client.query(f"SELECT * FROM {table} LIMIT 5").to_pandas()
                 # Convert DataFrame to a dictionary (list of dictionaries for each row)
                 table_data[table] = df.to_dict(orient="records")
             except Exception as e:
@@ -59,7 +55,6 @@ class InfluxDB:
 
         return table_data
 
-    @staticmethod
-    def execute_query(client: InfluxDBClient3, query: str) -> list[Any]:
+    def execute_query(self, query: str) -> list[Any]:
         """Execute the SQL query using InfluxDB client."""
-        return cast(list[Any], client.query(query).to_pylist())
+        return cast(list[Any], self.client.query(query).to_pylist())

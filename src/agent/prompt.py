@@ -23,7 +23,7 @@ class Prompt:
 
     @staticmethod
     def answer_machine() -> str:
-        """Prompt for answer of a question.."""
+        """Prompt for answer of a question."""
         return """"You are an expert answering machine.
         Given the following user question, corresponding SQL query, and SQL result, answer the user question in natural language.
         Question: {question}
@@ -63,13 +63,12 @@ class Prompt:
     @staticmethod
     def follow_up() -> str:
         """Prompt for follow-up conversation."""
-        return """The user asked: {question}
-        This appears to be a request to see the previous query results in a different format.
+        return """You are a expert of answering for follow-up questions.
+            The user asked: {question}
+            The previous query was: {query}
+            The query results were: {result}
 
-        The previous query was: {query}
-        The query results are: {result}
+            This appears to be a request to re-process answer based on the previous query and its results. Please process this data as requested by the user.
 
-        Please present this data as requested by the user. If they want a table format, show all the data in a clean tabular format without summarizing. If they're asking a follow-up question about the data, answer it based on the provided results.
-
-        Display ALL the data in the format requested by the user. DO NOT summarize the data unless explicitly asked to do so.
-        """
+            Do not summarize the data unless explicitly asked to do so.
+            """

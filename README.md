@@ -127,6 +127,17 @@ Update the `.env` file with the token and database name.
    ```
 3. To end the chat type `exit` or `quit`.
 
+## Type Checking and Linting
+This repo uses `pre-commit` hooks to check type and linting before committing the code.
+
+Install:
+```
+pip install pre-commit
+```
+Enable:
+```
+pre-commit install
+```
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
