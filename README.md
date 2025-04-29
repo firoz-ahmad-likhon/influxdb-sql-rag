@@ -20,8 +20,7 @@ Currently, the project supports the following memory savers and switching them i
 - MemorySaver
 - PostgresSaver
 
-
-## DEVELOPMENT
+## Development
 1. Clone the repository.
 2. Copy the `.env.example` to `.env` and update the values as per your environment. Some value would be available after up and running the docker containers.
 3. Up the docker containers
@@ -126,6 +125,13 @@ Update the `.env` file with the token and database name.
    python rag.py
    ```
 3. To end the chat type `exit` or `quit`.
+
+
+## Testing
+It is recommended to perform unit test before commiting the code. To run unit test, run the following command
+```
+pytest
+```
 
 ## Type Checking and Linting
 This repo uses `pre-commit` hooks to check type and linting before committing the code.
