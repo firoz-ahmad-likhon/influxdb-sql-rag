@@ -40,7 +40,7 @@ class InfluxDB:
 
         return schema_info
 
-    def data(self, tables: list[str]) -> dict[str, dict[Any, Any]]:
+    def data(self, tables: list[str]) -> dict[str, list[dict[str, Any]]]:
         """Return the first 5 rows from each table as JSON."""
         table_data = {}
         for table in tables:
