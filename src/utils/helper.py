@@ -27,7 +27,7 @@ class Helper:
             # Count matching characters
             score = sum(
                 c1 == c2
-                for c1, c2 in zip(target.lower(), candidate.lower(), strict=True)
+                for c1, c2 in zip(target.lower(), candidate.lower(), strict=False)
             )
             if score > best_score:
                 best_score = score
