@@ -34,6 +34,7 @@ class PostgresCheckpoint(CheckpointStrategyInterface):
         pool = ConnectionPool(
             conninfo=os.getenv("POSTGRES_URI"),
             max_size=20,
+            open=True,
             kwargs={"autocommit": True, "prepare_threshold": 0},
         )
         saver = PostgresSaver(pool)
