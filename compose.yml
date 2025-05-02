@@ -30,6 +30,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: ${ENV}
     container_name: langgraph-app
     ports:
       - "2024:2024"
