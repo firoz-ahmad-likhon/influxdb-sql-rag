@@ -13,12 +13,12 @@ COPY . .
 # Production stage
 FROM base AS prod
 # Default command to run your LangGraph app
-CMD ["/bin/bash"]
+CMD ["uvicorn", "api.rag:app", "--host", "0.0.0.0", "--port", "8000", "--app-dir", "."]
 
 # Development stage
 FROM base AS dev
 # Install additional development packages
-RUN pip install pytest==8.3.5 pre-commit==4.2.0
+RUN pip install pytest==8.3.5
 
 # Default command to run your LangGraph app
-CMD ["/bin/bash"]
+CMD ["uvicorn", "api.rag:app", "--reload", "--host", "0.0.0.0", "--port", "8000", "--app-dir", "."]

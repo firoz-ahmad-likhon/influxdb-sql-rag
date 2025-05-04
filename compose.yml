@@ -34,6 +34,7 @@ services:
     container_name: langgraph-app
     ports:
       - "2024:2024"
+      - "8000:8000"
     depends_on:
       - influxdb3
       - ollama
