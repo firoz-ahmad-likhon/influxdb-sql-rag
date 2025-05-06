@@ -103,7 +103,7 @@ Update the `.env` file with the token and database name.
    ollama serve
    ```
 
-***Langgraph***
+***Langgraph Studio***
 1. Run
    ```
    docker-compose exec -it langgraph bash
@@ -126,6 +126,9 @@ Update the `.env` file with the token and database name.
    ```
 3. To end the chat type `exit` or `quit`.
 
+**Frontend UI**
+1. Adjust `views/.env`
+2. Go to: `http://localhost:8501/` or replace `localhost` with the IP address of the machine.
 
 ## Testing
 It is recommended to perform unit test before commiting the code. To run unit test, run the following command

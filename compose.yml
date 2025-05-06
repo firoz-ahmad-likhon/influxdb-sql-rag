@@ -62,6 +62,23 @@ services:
       - app-network
     restart: unless-stopped
 
+  streamlit:
+    build:
+      context: ./views
+      dockerfile: Dockerfile
+      target: ${ENV}
+    container_name: streamlit-ui
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./views:/app
+      - ./views/.streamlit:/root/.streamlit
+    depends_on:
+      - langgraph
+    networks:
+      - app-network
+    restart: unless-stopped
+
 volumes:
   influxdb3-data:
   ollama-data:
