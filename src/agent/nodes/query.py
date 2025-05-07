@@ -69,14 +69,26 @@ class Quarify:
             )
             query_output = cast(dict[str, Any], response.model_dump())
             query_parser = QueryParser(query_output["query"])
-            table_name = query_parser.extract_table_name()
+            table_names = query_parser.extract_table_names()
 
-            if table_name and not decision.validate_table_exists(table_name):
-                error_msg = f"Table '{table_name}' does not exist."
-                suggested_table = Helper.find_similar_item(table_name, decision.tables)
+            missing_tables = [
+                name for name in table_names if not decision.validate_table_exists(name)
+            ]
 
-                if suggested_table:
-                    error_msg += f" Did you mean '{suggested_table}'?"
+            if missing_tables:
+                error_msg = f"Table(s) {', '.join(missing_tables)} do not exist."
+
+                suggestions = [
+                    Helper.find_similar_item(name, decision.tables)
+                    for name in missing_tables
+                ]
+
+                suggestions = [s for s in suggestions if s]  # Exclude None
+
+                if suggestions:
+                    suggestion_text = ", ".join(f"'{s}'" for s in suggestions)
+                    error_msg += f" Did you mean {suggestion_text}?"
+
                 return {
                     "question": question,
                     "type": "chat",
