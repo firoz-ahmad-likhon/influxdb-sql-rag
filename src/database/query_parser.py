@@ -1,4 +1,4 @@
-import re
+from sqlglot import parse_one, exp
 
 
 class QueryParser:
@@ -6,22 +6,22 @@ class QueryParser:
 
     def __init__(self, query: str):
         """Initialize the QueryParser object."""
-        self.query = query.lower()
+        self.query = query
 
-    def extract_table_name(self) -> str | None:
-        """Extract the table name from a SQL query.
+    def extract_table_names(self) -> list[str]:
+        """Extract the table name from a SQL query."""
+        try:
+            expression = parse_one(self.query)
 
-        This is a simple implementation and might need improvement for complex queries.
-        """
-        if "from" not in self.query:
-            return None
+            # Get names of Common Table Expressions (CTEs) to exclude them
+            cte_names = {cte.alias_or_name for cte in expression.find_all(exp.CTE)}
 
-        # Get the part after FROM
-        from_part = self.query.split("from")[1].strip()
-        # Get the first word after FROM, which should be the table name
-        table_name = from_part.split()[0].strip(";").strip()
+            tables = {
+                table.name
+                for table in expression.find_all(exp.Table)
+                if table.name not in cte_names
+            }
 
-        # Remove any quotes or backticks
-        table_name = re.sub(r'[`"\']', "", table_name)
-
-        return table_name
+            return list(tables)
+        except Exception:
+            return []

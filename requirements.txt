@@ -10,3 +10,4 @@ pandas == 2.2.3
 psycopg-pool == 3.2.6
 psycopg[binary] == 3.2.6
 pydantic == 2.10.6
+sqlglot[rs] == 26.16.4
