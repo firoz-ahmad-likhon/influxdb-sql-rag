@@ -18,11 +18,11 @@ class TestWorkflowConversation:
         conversation = [
             {"question": "Hi", "expected_type": "chat"},
             {
-                "question": "Give me latest 20 rows from attendance",
+                "question": "Give me latest 5 rows from air sensors.",
                 "expected_type": "query",
             },
             {
-                "question": "Display the prior result in tabular form",
+                "question": "Display the prior result in tabular form.",
                 "expected_type": "follow-up",
             },
         ]

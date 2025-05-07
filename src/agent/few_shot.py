@@ -11,12 +11,12 @@ class InfluxDBFewShot:
         """Generate few shot training prompt for SQL generation."""
         examples = [
             {
-                "input": "List all students who were present yesterday.",
-                "output": "SELECT name FROM attendance WHERE present = 1 AND time = '2025-03-20'",
+                "input": "List all sensors.",
+                "output": "SELECT sensor_id FROM sensor_meta",
             },
             {
-                "input": "How many students were absent last Tuesday?",
-                "output": "SELECT COUNT(*) FROM attendance WHERE present = 0 AND time = '2025-03-18'",
+                "input": "What is the average temperature in Main Lobby?",
+                "output": "SELECT avg(temperature) FROM air_sensors LEFT JOIN sensor_meta ON air_sensors.sensor_id = sensor_meta.sensor_id WHERE location = 'Main Lobby'",
             },
         ]
 

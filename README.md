@@ -43,46 +43,25 @@ Currently, the project supports the following memory savers and switching them i
     ```
 4. Create the database:
     ```
-    influxdb3 create database students
+    influxdb3 create database sensors
     ```
 5. Write into the database:
     ```
-    influxdb3 write \
-      --database students \
-      'attendance,name=abc present=1 1742256000
-    attendance,name=xyz present=0 1742256000
-    attendance,name=abc present=0 1742342400
-    attendance,name=xyz present=1 1742342400
-    attendance,name=abc present=1 1742428800
-    attendance,name=xyz present=1 1742428800'
+    influxdb3 write --database sensors  --file /home/data/air-sensor-data.lp
     ```
     ```
-    influxdb3 write \
-      --database students \
-      'home,room=Living\ Room temp=21.1,hum=35.9,co=0i 1736323200
-    home,room=Kitchen temp=21.0,hum=35.9,co=0i 1736323200
-    home,room=Living\ Room temp=21.4,hum=35.9,co=0i 1736326800
-    home,room=Kitchen temp=23.0,hum=36.2,co=0i 1736326800
-    home,room=Living\ Room temp=21.8,hum=36.0,co=0i 1736330400
-    home,room=Kitchen temp=22.7,hum=36.1,co=0i 1736330400
-    home,room=Living\ Room temp=22.2,hum=36.0,co=0i 1736334000
-    home,room=Kitchen temp=22.4,hum=36.0,co=0i 1736334000
-    home,room=Living\ Room temp=22.2,hum=35.9,co=0i 1736337600
-    home,room=Kitchen temp=22.5,hum=36.0,co=0i 1736337600
-    home,room=Living\ Room temp=22.4,hum=36.0,co=0i 1736341200
-    home,room=Kitchen temp=22.8,hum=36.5,co=1i 1736341200'
-    ```
-    OR you can use file:
-    ```
-    influxdb3 write --database students  --file /home/docker/attendance.txt
+    influxdb3 write --database sensors  --file /home/data/sensor-meta-data.lp
     ```
 6. Verify:
     ```
-    influxdb3 query --database=students "SHOW TABLES"
+    influxdb3 query --database=sensors "SHOW TABLES"
     ```
 7. Delete if needed:
     ```
-    influxdb3 delete table --database students attendance
+    influxdb3 delete table --database sensors air_sensors
+    ```
+   ```
+    influxdb3 delete table --database sensors sensor_meta
     ```
 Update the `.env` file with the token and database name.
 
