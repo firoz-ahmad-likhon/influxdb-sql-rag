@@ -8,6 +8,7 @@ repos:
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: check-added-large-files
+        args: ['--maxkb=1024']
     -   id: check-json
     -   id: check-xml
     -   id: debug-statements
@@ -19,6 +20,12 @@ repos:
     -   id: check-executables-have-shebangs
     -   id: check-byte-order-marker
     -   id: check-ast
+
+    # Black
+-   repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+    -   id: black
 
     # Ruff
 -   repo: https://github.com/astral-sh/ruff-pre-commit
@@ -33,9 +40,3 @@ repos:
     hooks:
     -   id: mypy
         args: ["--config-file", "./.mypy.ini", --explicit-package-bases]
-
-    # Black
--   repo: https://github.com/psf/black
-    rev: 25.1.0
-    hooks:
-    -   id: black
