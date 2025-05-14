@@ -1,6 +1,6 @@
 services:
   influxdb3:
-    image: quay.io/influxdb/influxdb3-core:latest
+    image: influxdb:3.0-core
     container_name: influxdb3-core
     command: >
       serve
@@ -17,7 +17,7 @@ services:
     restart: unless-stopped
 
   ollama:
-    image: ollama/ollama
+    image: ollama/ollama:0.6.8
     container_name: ollama
     ports:
       - "11434:11434"
@@ -49,7 +49,7 @@ services:
 
   postgres:
     container_name: postgres-sql
-    image: postgres
+    image: postgres:15.13
     hostname: postgres
     ports:
       - "5432:5432"

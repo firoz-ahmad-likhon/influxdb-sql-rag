@@ -1,0 +1,2 @@
+*.lp linguist-detectable=false
+*.py linguist-language=Python
