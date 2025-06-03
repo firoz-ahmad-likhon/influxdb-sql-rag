@@ -9,6 +9,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from src.database.influxdb import InfluxDB
 from src.database.query_parser import QueryParser
 from src.utils.helper import Helper
+from src.utils.data_provider import DataProvider
 
 
 class Quarify:
@@ -48,10 +49,10 @@ class Quarify:
 
         prompt = prompt_template.invoke(
             {
-                "instruction": Prompt.sql_query_generation().format(
+                "instruction": Prompt.sql_query_generation_using_catalog().format(
                     top_k=10,
-                    table_info=decision.tables,
-                    column_info=decision.columns,
+                    catalog=DataProvider.catalog(),
+                    glossary=DataProvider.glossary(),
                     sample_data=decision.data,
                     error_list="",
                 ),

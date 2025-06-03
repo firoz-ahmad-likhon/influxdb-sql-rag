@@ -1,0 +1,103 @@
+[
+  {
+    "dataset": "air_sensors",
+    "field": "sensor_id",
+    "description": "Unique ID of the air sensor",
+    "type": "string",
+    "categories": [
+      "TLM0100",
+      "TLM0101",
+      "TLM0102",
+      "TLM0103",
+      "TLM0200",
+      "TLM0201",
+      "TLM0202",
+      "TLM0203"
+    ]
+  },
+  {
+    "dataset": "air_sensors",
+    "field": "temperature",
+    "description": "Temperature measured by the sensor",
+    "type": "float",
+    "categories": null
+  },
+  {
+    "dataset": "air_sensors",
+    "field": "humidity",
+    "description": "Humidity percentage measured by the sensor",
+    "type": "float",
+    "categories": null
+  },
+  {
+    "dataset": "air_sensors",
+    "field": "co",
+    "description": "Carbon monoxide level measured by the sensor",
+    "type": "float",
+    "categories": null
+  },
+  {
+    "dataset": "air_sensors",
+    "field": "time",
+    "description": "UTC timestamp of the sensor reading in nanoseconds",
+    "type": "timestamp",
+    "categories": null
+  },
+  {
+    "dataset": "sensor_meta",
+    "field": "sensor_id",
+    "description": "Unique ID of the air sensor",
+    "type": "string",
+    "categories": [
+      "TLM0100",
+      "TLM0101",
+      "TLM0102",
+      "TLM0103",
+      "TLM0200",
+      "TLM0201",
+      "TLM0202",
+      "TLM0203"
+    ]
+  },
+  {
+    "dataset": "sensor_meta",
+    "field": "location",
+    "description": "Physical location where the sensor is installed",
+    "type": "string",
+    "categories": [
+      "Conference Room",
+      "Main Lobby",
+      "Mechanical Room",
+      "Room 101",
+      "Room 102",
+      "Room 201",
+      "Room 202",
+      "Room 203"
+    ]
+  },
+  {
+    "dataset": "sensor_meta",
+    "field": "model_number",
+    "description": "Model number of the sensor",
+    "type": "string",
+    "categories": [
+      "TLM89092A",
+      "TLM89092B",
+      "TLM90012Z"
+    ]
+  },
+  {
+    "dataset": "sensor_meta",
+    "field": "last_inspected",
+    "description": "Timestamp when the sensor was last inspected",
+    "type": "timestamp",
+    "categories": null
+  },
+  {
+    "dataset": "sensor_meta",
+    "field": "time",
+    "description": "UTC timestamp of data ingestion in nanoseconds",
+    "type": "timestamp",
+    "categories": null
+  }
+]

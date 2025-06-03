@@ -1,0 +1,39 @@
+[
+  {
+    "dataset": "air_sensors",
+    "description": "Time-series measurements from environmental air sensors",
+    "fields": [
+      "sensor_id",
+      "temperature",
+      "humidity",
+      "co",
+      "time"
+    ],
+    "primary_key": [
+      "sensor_id",
+      "timestamp"
+    ],
+    "foreign_keys": [
+      {
+        "field": "sensor_id",
+        "references": {
+          "dataset": "sensor_meta",
+          "field": "sensor_id"
+        }
+      }
+    ]
+  },
+  {
+    "dataset": "sensor_meta",
+    "description": "Metadata about air sensors including their location and model",
+    "fields": [
+      "sensor_id",
+      "location",
+      "model_number",
+      "last_inspected"
+    ],
+    "primary_key": [
+      "sensor_id"
+    ]
+  }
+]

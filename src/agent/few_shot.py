@@ -12,11 +12,15 @@ class InfluxDBFewShot:
         examples = [
             {
                 "input": "List all sensors.",
-                "output": "SELECT sensor_id FROM sensor_meta",
+                "output": "SELECT sensor_meta.sensor_id FROM sensor_meta",
             },
             {
                 "input": "What is the average temperature in Main Lobby?",
-                "output": "SELECT avg(temperature) FROM air_sensors LEFT JOIN sensor_meta ON air_sensors.sensor_id = sensor_meta.sensor_id WHERE location = 'Main Lobby'",
+                "output": "SELECT avg(air_sensors.temperature) FROM air_sensors LEFT JOIN sensor_meta ON air_sensors.sensor_id = sensor_meta.sensor_id WHERE sensor_meta.location = 'Main Lobby'",
+            },
+            {
+                "input": "What is the latest temperature in Room 201?",
+                "output": "SELECT air_sensors.temperature FROM air_sensors INNER JOIN sensor_meta ON air_sensors.sensor_id = sensor_meta.sensor_id WHERE sensor_meta.location = 'Room 201' ORDER BY air_sensors.time DESC LIMIT 1",
             },
         ]
 
