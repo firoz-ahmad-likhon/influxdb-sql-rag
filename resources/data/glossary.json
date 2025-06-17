@@ -20,21 +20,24 @@
     "field": "temperature",
     "description": "Temperature measured by the sensor",
     "type": "float",
-    "categories": null
+    "categories": null,
+    "unit": "Fahrenheit"
   },
   {
     "dataset": "air_sensors",
     "field": "humidity",
     "description": "Humidity percentage measured by the sensor",
     "type": "float",
-    "categories": null
+    "categories": null,
+    "unit": "Percent"
   },
   {
     "dataset": "air_sensors",
     "field": "co",
     "description": "Carbon monoxide level measured by the sensor",
     "type": "float",
-    "categories": null
+    "categories": null,
+    "unit": "ppm"
   },
   {
     "dataset": "air_sensors",
