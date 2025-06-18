@@ -2,7 +2,7 @@
 This project is an implementation of question answering sql rag in InfluxDB and langgraph.
 
 ## Graph
-![DAG](static/influxdb-rag-white.png)
+![DAG](resources/images/influxdb-rag-white.png)
 
 ## Prerequisites
 - Docker installed.
@@ -11,6 +11,7 @@ This project is an implementation of question answering sql rag in InfluxDB and 
 ## Models
 - llama3.2
 - llama3-groq-tool-use
+- nomic-embed-text
 
 ## LLM Connection
 - OLLAMA
@@ -76,6 +77,9 @@ Update the `.env` file with the token and database name.
    ```
    ```
    ollama pull llama3-groq-tool-use
+   ```
+   ```
+   ollama pull nomic-embed-text
    ```
 3. Start the server:
    ```

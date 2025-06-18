@@ -1,6 +1,7 @@
 fastapi[standard] == 0.115.12
 influxdb3-python == 0.11.0
 langchain == 0.3.19
+langchain-chroma == 0.2.2
 langchain-community == 0.3.18
 langchain-ollama == 0.3.0
 langgraph == 0.3.20
