@@ -68,16 +68,16 @@ services:
 
   streamlit:
     build:
-      context: ./views
+      context: frontend
       dockerfile: Dockerfile
       target: ${ENV}
     ports:
       - "8501:8501"
     env_file:
-      - .env
+      - frontend/.env
     volumes:
-      - ./views:/app
-      - ./views/.streamlit:/root/.streamlit
+      - ./frontend/pages:/app/pages
+      - ./frontend/.streamlit:/root/.streamlit
     restart: unless-stopped
     networks:
       - langgraph-net
