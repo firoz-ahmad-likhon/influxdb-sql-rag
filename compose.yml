@@ -50,6 +50,7 @@ services:
     volumes:
       - ./src:/app/src
       - ./api:/app/api
+      - ./rag.py:/app/rag.py
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8000/health"]
       interval: 10s

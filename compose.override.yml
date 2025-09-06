@@ -5,6 +5,7 @@ x-airflow-volumes: &test-volumes
     - ./tests:/app/tests
     - ./pytest.ini:/app/pytest.ini
     - ./resources/data:/app/resources/data
+    - ./langgraph.json:/app/langgraph.json
 
 services:
   langgraph:
