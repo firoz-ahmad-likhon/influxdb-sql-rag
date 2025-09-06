@@ -4,9 +4,6 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.checkpoint.base import BaseCheckpointSaver
 from psycopg_pool import ConnectionPool
-from src.utils.config import Config
-
-Config.load_env()  # Load environment variables
 
 
 class CheckpointStrategyInterface(ABC):

@@ -1,84 +1,117 @@
 services:
   influxdb3:
     image: influxdb:3.0-core
-    container_name: influxdb3-core
-    command: >
-      serve
-      --node-id=local-pc
-      --object-store file
-      --data-dir /var/lib/influxdb3
     ports:
       - "8181:8181"
+    command: >
+      serve
+      --node-id=node0
+      --object-store=file
+      --data-dir=/var/lib/influxdb3
     volumes:
       - influxdb3-data:/var/lib/influxdb3
       - ./resources/data:/home/data
-    networks:
-      - app-network
+    healthcheck:
+      test: "bash -c 'cat < /dev/null > /dev/tcp/localhost/8181'"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
+    networks:
+      - langgraph-net
 
   ollama:
     image: ollama/ollama:0.6.8
-    container_name: ollama
     ports:
       - "11434:11434"
     volumes:
       - ollama-data:/root/.ollama
-    networks:
-      - app-network
+    healthcheck:
+      test: "bash -c 'cat < /dev/null > /dev/tcp/localhost/11434'"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
+    networks:
+      - langgraph-net
 
   langgraph:
     build:
       context: .
       dockerfile: Dockerfile
       target: ${ENV}
-    container_name: langgraph-app
     ports:
       - "2024:2024"
       - "8000:8000"
-    depends_on:
-      - influxdb3
-      - ollama
-    stdin_open: true
-    tty: true
+    env_file:
+      - .env
     volumes:
-      - .:/app
-    networks:
-      - app-network
+      - ./src:/app/src
+      - ./api:/app/api
+      - ./rag.py:/app/rag.py
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      influxdb3:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
+    networks:
+      - langgraph-net
 
   postgres:
-    container_name: postgres-sql
     image: postgres:15.13
-    hostname: postgres
     ports:
       - "5432:5432"
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    networks:
-      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
+    networks:
+      - langgraph-net
 
   streamlit:
     build:
-      context: ./views
+      context: frontend
       dockerfile: Dockerfile
       target: ${ENV}
-    container_name: streamlit-ui
     ports:
       - "8501:8501"
+    env_file:
+      - ./frontend/.env
     volumes:
-      - ./views:/app
-      - ./views/.streamlit:/root/.streamlit
+      - ./frontend/pages:/app/pages
+      - ./frontend/.streamlit:/root/.streamlit
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8501/_stcore/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     depends_on:
-      - langgraph
-    networks:
-      - app-network
+      langgraph:
+        condition: service_healthy
     restart: unless-stopped
+    networks:
+      - langgraph-net
 
 volumes:
   influxdb3-data:
@@ -86,5 +119,5 @@ volumes:
   postgres-data:
 
 networks:
-  app-network:
+  langgraph-net:
     driver: bridge

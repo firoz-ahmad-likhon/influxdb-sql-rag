@@ -1,10 +1,7 @@
 import streamlit as st
 import requests  # type: ignore
-from dotenv import load_dotenv
 import os
 
-# Load environment variables
-load_dotenv()
 API_ENDPOINT = os.getenv("API_ENDPOINT", "http://localhost:8000/api/chat")
 
 st.set_page_config(page_title="InfluxDB RAG Chat", layout="centered")

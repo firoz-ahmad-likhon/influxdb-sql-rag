@@ -8,11 +8,6 @@ This project is an implementation of question answering sql rag in InfluxDB and 
 - Docker installed.
 - An account in Langsmith.
 
-## Models
-- llama3.2
-- llama3-groq-tool-use
-- nomic-embed-text
-
 ## LLM Connection
 - OLLAMA
 
@@ -26,13 +21,13 @@ Currently, the project supports the following memory savers and switching them i
 2. Copy the `.env.example` to `.env` and update the values as per your environment. Some value would be available after up and running the docker containers.
 3. Up the docker containers
    ```
-   docker-compose up -d --build
+   docker compose up -d --build
    ```
 
 ***InfluxDB***
 1. Run
    ```
-   docker-compose exec -it influxdb3 bash
+   docker compose exec -it influxdb3 bash
    ```
 2. Create the token:
     ```
@@ -69,7 +64,7 @@ Update the `.env` file with the token and database name.
 ***Ollama***
 1. Run
    ```
-   docker-compose exec -it ollama bash
+   docker compose exec -it ollama bash
    ```
 2. Install models:
    ```
@@ -89,32 +84,31 @@ Update the `.env` file with the token and database name.
 ***Langgraph Studio***
 1. Run
    ```
-   docker-compose exec -it langgraph bash
+   docker compose exec -it langgraph langgraph dev --host 0.0.0.0 --port 2024
    ```
-2. Run
-   ```
-   langgraph dev --host 0.0.0.0 --port 2024
-   ```
-3. [Studio UI](https://smith.langchain.com/studio/?baseUrl=http://127.0.0.1:2024). On failure, browse to `Langgraph Platform > Langgraph Studio`.
-4. [Langsmith UI](https://smith.langchain.com).
+2. [Studio UI](https://smith.langchain.com/studio/?baseUrl=http://127.0.0.1:2024). On failure, browse to `Langgraph Platform > Langgraph Studio`.
+3. [Langsmith UI](https://smith.langchain.com).
 
-***CLI***
+***CLI RAG***
 1. Run
    ```
-   docker-compose exec -it langgraph bash
+   docker compose exec -it langgraph python rag.py
    ```
-2. Run
-   ```
-   python rag.py
-   ```
-3. To end the chat type `exit` or `quit`.
+2. To end the chat type `exit` or `quit`.
 
 **Frontend UI**
-1. Adjust `views/.env`
+1. Adjust `frontend/.env`
 2. Go to: `http://localhost:8501/` or replace `localhost` with the IP address of the machine.
 
 ## Testing
-It is recommended to perform unit test before commiting the code. To run unit test, run the following command
+It is recommended to perform unit test before commiting the code. To run unit test, ensure `ENV=dev` in `.env`.
+
+To access the server:
+```
+docker compose exec -it langgraph bash
+```
+and run the following command:
+
 ```
 pytest
 ```
@@ -122,6 +116,18 @@ pytest
 ## Type Checking and Linting
 This repo uses `pre-commit` hooks to check type and linting before committing the code.
 
+Virtual environment:
+```
+python -m venv .venv
+```
+Activate:
+```
+source .venv/bin/activate
+```
+In Windows, use:
+```
+.venv\Scripts\activate
+```
 Install:
 ```
 pip install pre-commit
@@ -130,6 +136,15 @@ Enable:
 ```
 pre-commit install
 ```
+
+## Production
+1. Clone the repo.
+2. Copy the `.env.example` to `.env` and update the values as per your environment.
+3. Set `ENV=prod` in `.env`
+4. Up the docker containers:
+   ```
+   docker compose -f compose.yml up -d --build
+   ```
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

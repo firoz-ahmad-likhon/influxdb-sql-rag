@@ -13,18 +13,18 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the code
-COPY src/ src/
-COPY api/ api/
+COPY pages/ pages/
 
 # Production stage
 FROM base AS prod
-# Default command to run your LangGraph app
-CMD ["uvicorn", "api.rag:app", "--host", "0.0.0.0", "--port", "8000", "--app-dir", "."]
+
+EXPOSE 8501
+
+CMD ["streamlit", "run", "pages/app.py", "--server.address=0.0.0.0"]
 
 # Development stage
 FROM base AS dev
-# Install additional development packages
-RUN pip install pytest==8.3.5
 
-# Default command to run your LangGraph app
-CMD ["uvicorn", "api.rag:app", "--reload", "--host", "0.0.0.0", "--port", "8000", "--app-dir", "."]
+EXPOSE 8501
+
+CMD ["streamlit", "run", "pages/app.py", "--server.address=0.0.0.0", "--server.runOnSave=true"]
