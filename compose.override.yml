@@ -1,0 +1,11 @@
+# Attach volumes for dev environment
+
+x-airflow-volumes: &test-volumes
+  volumes:
+    - ./tests:/app/tests
+    - ./pytest.ini:/app/pytest.ini
+    - ./resources/data:/app/resources/data
+
+services:
+  langgraph:
+    <<: *test-volumes
