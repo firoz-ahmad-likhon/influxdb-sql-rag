@@ -1,10 +1,7 @@
 import json
 from typing import Any, cast
 from pathlib import Path
-from src.utils.config import Config
 import os
-
-Config.load_env()
 
 
 class DataProvider:

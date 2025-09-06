@@ -2,11 +2,8 @@ from langchain_core.prompts import FewShotChatMessagePromptTemplate, ChatPromptT
 from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
 from langchain.prompts.example_selector import MaxMarginalRelevanceExampleSelector
-from src.utils.config import Config
 from langsmith import traceable
 import os
-
-Config.load_env()
 
 
 class InfluxDBFewShot:

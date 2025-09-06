@@ -36,7 +36,8 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/app
+      - ./src:/app/src
+      - ./api:/app/api
     depends_on:
       postgres:
         condition: service_healthy
@@ -74,7 +75,7 @@ services:
     ports:
       - "8501:8501"
     env_file:
-      - frontend/.env
+      - ./frontend/.env
     volumes:
       - ./frontend/pages:/app/pages
       - ./frontend/.streamlit:/root/.streamlit

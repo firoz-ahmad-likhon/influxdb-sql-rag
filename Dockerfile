@@ -8,7 +8,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the code
-COPY . .
+COPY src/ src/
+COPY api/ api/
 
 # Production stage
 FROM base AS prod

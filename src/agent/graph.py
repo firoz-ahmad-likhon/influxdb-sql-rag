@@ -1,5 +1,4 @@
 from src.database.influxdb import InfluxDB
-from src.utils.config import Config
 from src.agent.state import State
 from influxdb_client_3 import InfluxDBClient3
 from langchain_ollama import ChatOllama
@@ -18,8 +17,6 @@ class Workflow:
 
     def __init__(self) -> None:
         """Initialize the workflow."""
-        Config.load_env()
-
         self.llm = ChatOllama(
             model=os.getenv("LLM_MODEL"),
             temperature=0,
