@@ -36,6 +36,12 @@ def root() -> dict[str, str]:
     return {"message": "Welcome to the InfluxDB RAG API."}
 
 
+@app.get("/health")
+def health_check() -> dict[str, str]:
+    """Health check."""
+    return {"status": "ok"}
+
+
 @app.post("/api/chat")
 def chat(payload: Question) -> dict[str, str]:
     """Chat endpoint."""

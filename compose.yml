@@ -6,11 +6,17 @@ services:
     command: >
       serve
       --node-id=node0
-      --object-store file
-      --data-dir /var/lib/influxdb3
+      --object-store=file
+      --data-dir=/var/lib/influxdb3
     volumes:
       - influxdb3-data:/var/lib/influxdb3
       - ./resources/data:/home/data
+    healthcheck:
+      test: "bash -c 'cat < /dev/null > /dev/tcp/localhost/8181'"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
     networks:
       - langgraph-net
@@ -21,6 +27,12 @@ services:
       - "11434:11434"
     volumes:
       - ollama-data:/root/.ollama
+    healthcheck:
+      test: "bash -c 'cat < /dev/null > /dev/tcp/localhost/11434'"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
     networks:
       - langgraph-net
@@ -38,7 +50,15 @@ services:
     volumes:
       - ./src:/app/src
       - ./api:/app/api
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     depends_on:
+      influxdb3:
+        condition: service_healthy
       postgres:
         condition: service_healthy
     restart: unless-stopped
@@ -79,6 +99,15 @@ services:
     volumes:
       - ./frontend/pages:/app/pages
       - ./frontend/.streamlit:/root/.streamlit
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8501/_stcore/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      langgraph:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - langgraph-net
