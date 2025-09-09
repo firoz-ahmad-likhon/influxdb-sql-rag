@@ -1,21 +1,17 @@
 import pytest
+from pytest_mock import MockerFixture
+from src.agent.state import State
 from src.agent.parser import TruthOutput
 from src.database.question_analyzer import QuestionAnalyzer
-from unittest.mock import MagicMock
 
 
 class TestQuestionAnalyzer:
     """Test the QuestionAnalyzer class."""
 
     @pytest.fixture(autouse=True)
-    def setup_method(
-        self,
-        mock_client: MagicMock,
-        mock_llm: MagicMock,
-        mock_state: MagicMock,
-    ) -> None:
+    def setup_method(self, mocker: MockerFixture, mock_state: State) -> None:
         """Initialize test method."""
-        self.client = mock_client
+        self.client = mocker.MagicMock()
         self.client.tables.return_value = ["sensor_1", "sensor_2"]
         self.client.columns.return_value = {
             "sensor_1": [
@@ -27,7 +23,7 @@ class TestQuestionAnalyzer:
                 {"column_name": "humidity", "data_type": "float"},
             ],
         }
-        self.llm = mock_llm
+        self.llm = mocker.MagicMock()
         self.state = mock_state
         self.question_analyzer = QuestionAnalyzer(
             question="What is the average temperature?",
@@ -67,14 +63,16 @@ class TestQuestionAnalyzer:
         self.question_analyzer.question = "What is the current temperature?"
         assert self.question_analyzer.is_follow_up() is False
 
-    def test_is_db_question(self) -> None:
-        """Test the is_db_question() method."""
+    def test_is_db_question_on_true(self) -> None:
+        """Test the is_db_question() method on true."""
         # Simulate successful LLM response
         self.llm.with_structured_output.return_value.with_config.return_value.invoke.return_value = TruthOutput(
             truth=True,
         )
         assert self.question_analyzer.is_db_question() is True
 
+    def test_is_db_question_on_false(self) -> None:
+        """Test the is_db_question() method on false."""
         # Simulate failed LLM response
         self.llm.with_structured_output.return_value.with_config.return_value.invoke.side_effect = Exception(
             "Boom",
