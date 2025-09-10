@@ -1,4 +1,3 @@
-from unittest.mock import patch
 import pytest
 from src.utils.helper import Helper
 from langgraph.checkpoint.memory import MemorySaver
@@ -8,9 +7,10 @@ from langgraph.checkpoint.base import BaseCheckpointSaver
 class TestHelper:
     """Test Helper class."""
 
-    @patch.dict("os.environ", {"CHECKPOINTER": "memory"})
-    def test_checkpoint_returns_saver(self) -> None:
+    def test_checkpoint_returns_saver(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test checkpoint function."""
+        monkeypatch.setenv("CHECKPOINTER", "memory")
+
         checkpointer = Helper.checkpoint()
         assert isinstance(checkpointer, BaseCheckpointSaver)
         assert isinstance(checkpointer, MemorySaver)

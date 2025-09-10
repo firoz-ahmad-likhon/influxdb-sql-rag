@@ -1,6 +1,7 @@
 import json
 import pytest
-from unittest.mock import mock_open, patch, MagicMock
+from pathlib import Path
+from pytest_mock import MockerFixture
 from src.utils.data_provider import DataProvider
 
 
@@ -8,30 +9,41 @@ class TestDataProvider:
     """Test DataProvider class."""
 
     @pytest.fixture(autouse=True)
-    def setup(self) -> None:
-        """Initialize test method."""
+    def setup(self, monkeypatch: pytest.MonkeyPatch, mocker: MockerFixture) -> None:
+        """Initialize test setup."""
         self.mock_catalog_data = {"items": ["item1", "item2"]}
         self.mock_glossary_data = {"terms": ["term1", "term2"]}
-        self.mock_env_path = "test/resources/data"
+        self.mock_base_path = Path("test/resources/data")
 
-    @patch("src.utils.data_provider.os.getenv")
-    @patch("src.utils.data_provider.Path.open")
-    def test_catalog(self, mock_open_func: MagicMock, mock_getenv: MagicMock) -> None:
+        # Set BASE_PATH once for all tests
+        monkeypatch.setattr(
+            "src.utils.data_provider.DataProvider.BASE_PATH",
+            self.mock_base_path,
+        )
+
+        # Store mocker for use in individual tests
+        self.mocker = mocker
+
+    def test_catalog(self) -> None:
         """Test catalog method."""
-        mock_getenv.return_value = self.mock_env_path
-        mock_file = mock_open(read_data=json.dumps(self.mock_catalog_data))
-        mock_open_func.side_effect = mock_file
+        # Mock Path.open for catalog.json
+        mock_file = self.mocker.mock_open(read_data=json.dumps(self.mock_catalog_data))
+        self.mocker.patch("src.utils.data_provider.Path.open", mock_file)
 
         result = DataProvider.catalog()
         assert result == self.mock_catalog_data
 
-    @patch("src.utils.data_provider.os.getenv")
-    @patch("src.utils.data_provider.Path.open")
-    def test_glossary(self, mock_open_func: MagicMock, mock_getenv: MagicMock) -> None:
+        # Verify the correct file was opened
+        mock_file.assert_called_once_with("r", encoding="utf-8")
+
+    def test_glossary(self) -> None:
         """Test glossary method."""
-        mock_getenv.return_value = self.mock_env_path
-        mock_file = mock_open(read_data=json.dumps(self.mock_glossary_data))
-        mock_open_func.side_effect = mock_file
+        # Mock Path.open for glossary.json
+        mock_file = self.mocker.mock_open(read_data=json.dumps(self.mock_glossary_data))
+        self.mocker.patch("src.utils.data_provider.Path.open", mock_file)
 
         result = DataProvider.glossary()
         assert result == self.mock_glossary_data
+
+        # Verify the correct file was opened
+        mock_file.assert_called_once_with("r", encoding="utf-8")

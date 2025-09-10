@@ -24,7 +24,7 @@ CMD ["uvicorn", "api.rag:app", "--host", "0.0.0.0", "--port", "8000", "--app-dir
 # Development stage
 FROM base AS dev
 # Install additional development packages
-RUN pip install pytest==8.3.5
+RUN pip install pytest==8.4.2 pytest-mock==3.15.0
 
 # Default command to run your LangGraph app
 CMD ["uvicorn", "api.rag:app", "--reload", "--host", "0.0.0.0", "--port", "8000", "--app-dir", "."]
