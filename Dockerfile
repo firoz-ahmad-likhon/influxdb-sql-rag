@@ -19,7 +19,7 @@ COPY api/ api/
 # Production stage
 FROM base AS prod
 # Default command to run your LangGraph app
-CMD ["uvicorn", "api.rag:app", "--host", "0.0.0.0", "--port", "8000", "--app-dir", "."]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--app-dir", "."]
 
 # Development stage
 FROM base AS dev
@@ -28,4 +28,4 @@ COPY requirements-dev.txt .
 RUN pip install --no-cache-dir -r requirements-dev.txt
 
 # Default command to run your LangGraph app
-CMD ["uvicorn", "api.rag:app", "--reload", "--host", "0.0.0.0", "--port", "8000", "--app-dir", "."]
+CMD ["uvicorn", "api.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000", "--app-dir", "."]
