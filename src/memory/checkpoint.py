@@ -1,6 +1,6 @@
 import os
 from abc import ABC, abstractmethod
-from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.checkpoint.base import BaseCheckpointSaver
 from psycopg_pool import ConnectionPool
@@ -15,12 +15,12 @@ class CheckpointStrategyInterface(ABC):
         pass
 
 
-class MemoryCheckpoint(CheckpointStrategyInterface):
+class InMemoryCheckpoint(CheckpointStrategyInterface):
     """Memory saver strategy."""
 
-    def saver(self) -> MemorySaver:
+    def saver(self) -> InMemorySaver:
         """Get the memory checkpointer."""
-        return MemorySaver()
+        return InMemorySaver()
 
 
 class PostgresCheckpoint(CheckpointStrategyInterface):
@@ -40,7 +40,7 @@ class PostgresCheckpoint(CheckpointStrategyInterface):
 
 
 STRATEGIES = {
-    "memory": MemoryCheckpoint,
+    "memory": InMemoryCheckpoint,
     "postgres": PostgresCheckpoint,
 }
 
