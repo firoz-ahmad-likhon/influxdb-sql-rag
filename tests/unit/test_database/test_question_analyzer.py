@@ -3,6 +3,8 @@ from pytest_mock import MockerFixture
 from src.agent.state import State
 from src.agent.parser import TruthOutput
 from src.database.question_analyzer import QuestionAnalyzer
+from src.database.influxdb import InfluxDB
+from langchain_ollama import ChatOllama
 
 
 class TestQuestionAnalyzer:
@@ -11,7 +13,7 @@ class TestQuestionAnalyzer:
     @pytest.fixture(autouse=True)
     def setup_method(self, mocker: MockerFixture, mock_state: State) -> None:
         """Initialize test method."""
-        self.client = mocker.MagicMock()
+        self.client = mocker.MagicMock(spec=InfluxDB)
         self.client.tables.return_value = ["sensor_1", "sensor_2"]
         self.client.columns.return_value = {
             "sensor_1": [
@@ -23,7 +25,7 @@ class TestQuestionAnalyzer:
                 {"column_name": "humidity", "data_type": "float"},
             ],
         }
-        self.llm = mocker.MagicMock()
+        self.llm = mocker.MagicMock(spec=ChatOllama)
         self.state = mock_state
         self.question_analyzer = QuestionAnalyzer(
             question="What is the average temperature?",

@@ -9,7 +9,7 @@ This project is an implementation of question answering sql rag in InfluxDB and 
 - An account in Langsmith.
 
 ## LLM Connection
-- OLLAMA
+- Ollama
 
 ## Memory
 Currently, the project supports the following memory savers and switching them in `.env` file:
