@@ -1,6 +1,7 @@
 import streamlit as st
 import requests  # type: ignore
 import os
+import uuid
 
 API_ENDPOINT = os.getenv("API_ENDPOINT", "http://localhost:8000/api/chat")
 
@@ -15,6 +16,10 @@ if "pending_question" not in st.session_state:
 
 if "show_thinking" not in st.session_state:
     st.session_state.show_thinking = False
+
+# Fixed thread-id per session
+if "thread_id" not in st.session_state:
+    st.session_state.thread_id = str(uuid.uuid4())
 
 st.title("InfluxDB RAG Assistant")
 
@@ -42,6 +47,7 @@ if st.session_state.pending_question and st.session_state.show_thinking:
         res = requests.post(
             API_ENDPOINT,
             json={"question": st.session_state.pending_question},
+            headers={"thread-id": st.session_state.thread_id},
         )
         answer = res.json().get("answer", "No answer.")
     except Exception as e:
