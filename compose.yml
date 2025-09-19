@@ -41,7 +41,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: ${ENV}
+      target: ${ENV:-prod}
     ports:
       - "2024:2024"
       - "8000:8000"
@@ -92,7 +92,6 @@ services:
     build:
       context: frontend
       dockerfile: Dockerfile
-      target: ${ENV}
     ports:
       - "8501:8501"
     env_file:

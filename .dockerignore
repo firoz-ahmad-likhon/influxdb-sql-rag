@@ -1,0 +1,58 @@
+# Git and Docker
+.git
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose.yml
+compose.yml
+compose.*.yml
+
+# Environment files and Secrets
+.env
+.env.*
+*.env
+
+# IDE and OS-specific
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Python virtual environment & caches
+venv/
+.venv/
+__pycache__/
+.mypy_cache/
+.ruff_cache/
+*.pyc
+*.pyo
+*.pyd
+
+# Build artifacts and distribution files
+build/
+dist/
+*.egg-info/
+*.so
+
+# Testing artifacts and coverage reports
+tests/
+.pytest_cache/
+.coverage
+htmlcov/
+nosetests.xml
+coverage.xml
+
+# Logs and local databases
+logs/
+*.log
+*.db
+*.sqlite3
+
+# Config
+pytest.ini
+.mypy.ini
+.ruff.toml
+
+# Custom
+frontend/
+resources/images/
