@@ -146,5 +146,16 @@ pre-commit install
    docker compose -f compose.yml up -d --build
    ```
 
+## Docker Image
+The production-ready Docker image is automatically built and published to [Docker Hub](https://hub.docker.com/r/likh/influxdb-sql-rag) on every new GitHub Release.
+
+Pulling the Image:
+```
+docker pull likh/influxdb-sql-rag:latest
+```
+**Recommended to pull a specific tag (e.g. v1.0.0).**
+
+Currently there is no automatically build the `streamlit` as anyone can use any other frontend technology.
+
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
