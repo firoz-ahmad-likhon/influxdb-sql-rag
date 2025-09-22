@@ -1,4 +1,4 @@
-name: Python Test
+name: Unit Test
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    name: Tester
+    name: Unit Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
