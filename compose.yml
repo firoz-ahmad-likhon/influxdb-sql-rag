@@ -92,6 +92,7 @@ services:
     build:
       context: frontend
       dockerfile: Dockerfile
+      target: ${ENV:-prod}
     ports:
       - "8501:8501"
     env_file:
