@@ -38,10 +38,7 @@ services:
       - langgraph-net
 
   langgraph:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: ${ENV:-prod}
+    image: likh/influxdb-sql-rag:${IMAGE_TAG:-latest}
     ports:
       - "2024:2024"
       - "8000:8000"

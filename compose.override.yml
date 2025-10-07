@@ -1,6 +1,13 @@
-# Attach volumes for dev environment
+# Build in local
+x-langgraph-dev: &langgraph-dev
+  image: ""
+  build:
+    context: .
+    dockerfile: Dockerfile
+    target: ${ENV:-dev}
 
-x-airflow-volumes: &test-volumes
+# Attach volumes for dev environment
+x-langgraph-volumes: &langgraph-volumes
   volumes:
     - ./tests:/app/tests
     - ./pytest.ini:/app/pytest.ini
@@ -9,4 +16,4 @@ x-airflow-volumes: &test-volumes
 
 services:
   langgraph:
-    <<: *test-volumes
+    <<: [*langgraph-dev, *langgraph-volumes]
