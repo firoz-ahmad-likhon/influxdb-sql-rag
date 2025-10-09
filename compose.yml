@@ -38,10 +38,7 @@ services:
       - langgraph-net
 
   langgraph:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: ${ENV:-prod}
+    image: likh/influxdb-sql-rag:${IMAGE_TAG:-latest}
     ports:
       - "2024:2024"
       - "8000:8000"
@@ -51,6 +48,7 @@ services:
       - ./src:/app/src
       - ./api:/app/api
       - ./rag.py:/app/rag.py
+      - ./resources/data:/app/resources/data
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8000/health"]
       interval: 10s

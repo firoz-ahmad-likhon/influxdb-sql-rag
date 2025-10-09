@@ -143,7 +143,7 @@ pre-commit install
 3. Set `ENV=prod` in `.env`
 4. Up the docker containers:
    ```
-   docker compose -f compose.yml up -d --build
+   docker compose -f compose.yml up -d
    ```
 
 ## Docker Image
@@ -155,7 +155,7 @@ docker pull likh/influxdb-sql-rag:latest
 ```
 **Recommended to pull a specific tag (e.g. v1.0.0).**
 
-Currently there is no automatically build the `streamlit` as anyone can use any other frontend technology.
+Currently, there is no automatically build the `streamlit` as anyone can use any other frontend technology.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
