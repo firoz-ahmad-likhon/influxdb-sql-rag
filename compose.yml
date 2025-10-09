@@ -48,6 +48,7 @@ services:
       - ./src:/app/src
       - ./api:/app/api
       - ./rag.py:/app/rag.py
+      - ./resources/data:/app/resources/data
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8000/health"]
       interval: 10s
